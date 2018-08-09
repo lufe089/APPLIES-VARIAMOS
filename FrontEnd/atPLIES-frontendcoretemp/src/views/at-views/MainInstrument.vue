@@ -84,7 +84,7 @@
     <!-- Formulario para llenar las dimensiones, subcriterios y criterios -->
     <b-row fluid>
       <b-col lg="12">
-        <c-table hover caption="<i class='fa fa-align-justify'></i> APPLIES motivation"></c-table>
+        <subItems-table hover caption="<i class='fa fa-align-justify'></i> APPLIES motivation"></subItems-table>
       </b-col><!--/.col-->
     </b-row>
   </div>
@@ -92,7 +92,7 @@
 <script>
 
 import BDData from './_BDData.js'
-import cTable from '../base/Table.vue'
+import subItemsTable from './SubItemsTable.vue'
 import itemJustification from './ItemJustification.vue'
 
 export default {
@@ -109,7 +109,7 @@ export default {
   components: {
     /* tag, component name */
     'item-justification': itemJustification,
-    cTable
+    subItemsTable
   },
   methods: {
     click () {

@@ -1,9 +1,10 @@
 <template>
-  <b-card :header='caption'>
+  <b-card :header='caption' class="card-body">
     <b-table :hover='hover' :bordered='bordered' :small='small'  responsive='sm' :items='items' :fields='fields' :current-page='currentPage' :per-page='perPage'>
       <template slot='description' slot-scope='row'>
         <div class='clearfix'>
           <div class='float-left'>
+            <!-- Row is the slow scope therefore is the way to access to the information that we are drawing -->
             {{row.item.description}}
           </div>
           <div class='float-right'>
@@ -17,7 +18,8 @@
       </template>
       <template slot='responseFormat' slot-scope='data'>
       <div>
-         <!-- <b-form-group :id=''likertScale'+data.item.itemId'>
+         <!-- other whay to use the radio button group
+           <b-form-group :id=''likertScale'+data.item.itemId'>
           <b-form-radio-group v-model='selected' :options='options' name='likertScale'>
           </b-form-radio-group>
         </b-form-group> -->
@@ -50,7 +52,7 @@
           </div>
          </div>
       </template>
-      <!-- details of the review that the item migth need.  This slot should be named as row-details to work properly-->
+      <!-- Details of the review that the item migth need.  This slot should be named as row-details to work properly-->
       <template slot='row-details' slot-scope='row'>
         <item-justification :justification='row.item.justification' :itemName='row.item.name'></item-justification>
       </template>
@@ -96,7 +98,6 @@ export default {
   },
   data: () => {
     return {
-      showDismissibleAlert: false,
       improvementOptions: [
         { text: '-- Please select an option --', value: null },
         { text: 'Redundant', value: 0 },
@@ -187,13 +188,6 @@ export default {
         {key: 'needReview', label: 'SIIIIIIIIIIIIIIIIIIIII Needs review será?'},
         {key: 'responseFormat', label: 'Response'}
       ],
-      /* fields: [
-        {key: 'username', sortable: true},
-        {key: 'registered'},
-        {key: 'role'},
-        {key: 'status'},
-        {key: 'responseFormat'}
-      ], */
       currentPage: 1,
       perPage: 5,
       totalRows: 0,
