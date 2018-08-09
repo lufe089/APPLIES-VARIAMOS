@@ -1,50 +1,62 @@
 <template>
-  <b-card :header="caption">
-    <b-table :hover="hover" :bordered="bordered" :small="small" :fixed="fixed" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
-      <template slot="description" slot-scope="data">
-        <div class="clearfix">
-          <div class="float-left">
-            {{data.item.description}}
+  <b-card :header='caption'>
+    <b-table :hover='hover' :bordered='bordered' :small='small'  responsive='sm' :items='items' :fields='fields' :current-page='currentPage' :per-page='perPage'>
+      <template slot='description' slot-scope='row'>
+        <div class='clearfix'>
+          <div class='float-left'>
+            {{row.item.description}}
           </div>
-          <div class="float-right">
-            <b-btn class="badge badge-pill badge-dark" @click="toggleJustification(data.item)">
-              {{$t("message.why_question")}}
+          <div class='float-right'>
+             <!-- we use @click.stop here to prevent emitting of a 'row-clicked' event  -->
+             <!-- https://bootstrap-vue.js.org/docs/components/table/#row-details-support -->
+            <b-btn class='badge badge-pill badge-dark'  @click.stop='row.toggleDetails' v-model='row.detailsShowing'>
+              {{row.detailsShowing ? $t('message.hide') : $t('message.why_question')}}
             </b-btn>
           </div>
         </div>
-        <b-collapse v-model="data.item.showJustification" class="card card-body clearfix" id="prueba">
-          <h5 class="float-right">{{$t("message.justification")}}</h5>
-          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-          <small class="text-muted">
-           {{data.item.justification}}
-          </small>
-        </b-collapse>
       </template>
-      <template slot="status" slot-scope="data">
-        <b-badge :variant="getBadge(data.item.status)">{{data.item.status}}</b-badge>
-      </template>
-      <template slot="responseFormat" slot-scope="data">
+      <template slot='responseFormat' slot-scope='data'>
       <div>
-         <!-- <b-form-group :id="'likertScale'+data.item.itemId">
-          <b-form-radio-group v-model="selected" :options="options" name="likertScale">
+         <!-- <b-form-group :id=''likertScale'+data.item.itemId'>
+          <b-form-radio-group v-model='selected' :options='options' name='likertScale'>
           </b-form-radio-group>
         </b-form-group> -->
-        <b-form-radio-group   name="radioSubComponent" :id="'likertScale'+data.item.itemId">
-          <div  v-for="(value, key) in options" :key="key" class="custom-control-inline col-sm-3 py-0">
-            <b-form-radio :value="value.value" :id="data.item.itemId+value.value" >
+        <b-form-radio-group   :name="'likertScale'+data.item.itemId" :id="'likertScale'+data.item.itemId" v-model="responsesList[data.item.itemId].numericAnswer">
+          <div v-for='(value, key) in options' :key='key' class='custom-control-inline col-sm-4 py-0'>
+            <b-form-radio :value='value.value' :id='data.item.itemId+value.value' >
               <small>{{value.text}}</small>
-              <b-tooltip  :target="data.item.itemId+value.value" placement="top">
-                Hello <strong>World!</strong>
-              </b-tooltip>
             </b-form-radio>
-
+            <!-- <b-tooltip  :target='data.item.itemId+value.value' placement='top' v-show="value.value=-1">
+                Hello <strong>World!</strong>
+            </b-tooltip> -->
           </div>
         </b-form-radio-group>
       </div>
       </template>
+      <!-- Checkbox needReview -->
+      <template slot='needReview' slot-scope='row'>
+         <div class='clearfix'>
+          <div class='float-left'>
+            <b-form-checkbox @click.native.stop @change='toggleReview(responsesList[row.item.itemId])' v-model='responsesList[row.item.itemId].needReview'>
+                {{$t('message.needs_review')}}
+            </b-form-checkbox>
+            <div class='form-group' v-show='responsesList[row.item.itemId].needReview'>
+              <b-form-select v-model='responsesList[row.item.itemId].typeReview' :options='improvementOptions' class='mb-1'/>
+              <b-form-group>
+                  <small>{{$t('message.please_explain')}}</small>
+                  <b-form-textarea id='commentsText' :rows='2' v-model='responsesList[row.item.itemId].reviewComments'></b-form-textarea>
+                </b-form-group>
+            </div>
+          </div>
+         </div>
+      </template>
+      <!-- details of the review that the item migth need.  This slot should be named as row-details to work properly-->
+      <template slot='row-details' slot-scope='row'>
+        <item-justification :justification='row.item.justification' :itemName='row.item.name'></item-justification>
+      </template>
     </b-table>
     <nav>
-      <b-pagination :total-rows="getRowCount(items)" :per-page="perPage" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
+      <b-pagination :total-rows='getRowCount(items)' :per-page='perPage' v-model='currentPage' prev-text='Prev' next-text='Next' hide-goto-end-buttons/>
     </nav>
   </b-card>
 </template>
@@ -52,19 +64,7 @@
 <script>
 
 // import BDData from '../at-views/_BDData.js'
-/**
-   * Randomize array element order in-place.
-   * Using Durstenfeld shuffle algorithm.
-   */
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1))
-    let temp = array[i]
-    array[i] = array[j]
-    array[j] = temp
-  }
-  return array
-}
+import itemJustification from '../at-views/ItemJustification.vue'
 
 export default {
   name: 'c-table',
@@ -97,33 +97,15 @@ export default {
   data: () => {
     return {
       showDismissibleAlert: false,
-      items3: shuffleArray([
-        {username: 'Samppa Nori', registered: '2012/01/01', role: 'Member', status: 'Active', responseFormat: this.options, id: 2},
-        {username: 'Estavan Lykos', registered: '2012/02/01', role: 'Staff', status: 'Banned', responseFormat: this.options, id: 3},
-        {username: 'Chetan Mohamed', registered: '2012/02/01', role: 'Admin', status: 'Inactive'},
-        {username: 'Derick Maximinus', registered: '2012/03/01', role: 'Member', status: 'Pending'},
-        {username: 'Friderik Dávid', registered: '2012/01/21', role: 'Staff', status: 'Active'},
-        {username: 'Yiorgos Avraamu', registered: '2012/01/01', role: 'Member', status: 'Active'},
-        {username: 'Avram Tarasios', registered: '2012/02/01', role: 'Staff', status: 'Banned'},
-        {username: 'Quintin Ed', registered: '2012/02/01', role: 'Admin', status: 'Inactive'},
-        {username: 'Enéas Kwadwo', registered: '2012/03/01', role: 'Member', status: 'Pending'},
-        {username: 'Agapetus Tadeáš', registered: '2012/01/21', role: 'Staff', status: 'Active'},
-        {username: 'Carwyn Fachtna', registered: '2012/01/01', role: 'Member', status: 'Active'},
-        {username: 'Nehemiah Tatius', registered: '2012/02/01', role: 'Staff', status: 'Banned'},
-        {username: 'Ebbe Gemariah', registered: '2012/02/01', role: 'Admin', status: 'Inactive'},
-        {username: 'Eustorgios Amulius', registered: '2012/03/01', role: 'Member', status: 'Pending'},
-        {username: 'Leopold Gáspár', registered: '2012/01/21', role: 'Staff', status: 'Active'},
-        {username: 'Pompeius René', registered: '2012/01/01', role: 'Member', status: 'Active'},
-        {username: 'Paĉjo Jadon', registered: '2012/02/01', role: 'Staff', status: 'Banned'},
-        {username: 'Micheal Mercurius', registered: '2012/02/01', role: 'Admin', status: 'Inactive'},
-        {username: 'Ganesha Dubhghall', registered: '2012/03/01', role: 'Member', status: 'Pending'},
-        {username: 'Hiroto Šimun', registered: '2012/01/21', role: 'Staff', status: 'Active'},
-        {username: 'Vishnu Serghei', registered: '2012/01/01', role: 'Member', status: 'Active'},
-        {username: 'Zbyněk Phoibos', registered: '2012/02/01', role: 'Staff', status: 'Banned'},
-        {username: 'Einar Randall', registered: '2012/02/01', role: 'Admin', status: 'Inactive'},
-        {username: 'Félix Troels', registered: '2012/03/21', role: 'Staff', status: 'Active'},
-        {username: 'Aulus Agmundr', registered: '2012/01/01', role: 'Member', status: 'Pending'}
-      ]),
+      improvementOptions: [
+        { text: '-- Please select an option --', value: null },
+        { text: 'Redundant', value: 0 },
+        { text: 'Useless', value: 1 },
+        { text: 'Difficult to read it', value: 2 },
+        { text: 'Unclear', value: 3 },
+        { text: 'Other', value: 4 }
+      ],
+      responsesList: [],
       // items: BDData.customizedInstrument.itemsHierarchy.motivationHierarchy.hierarchicalItem.subHierarchicalItems.subItems
       items: [ {
         'itemId': 'subc1',
@@ -202,6 +184,7 @@ export default {
         {key: 'itemId', label: 'Id', sortable: true},
         {key: 'name', sortable: true},
         {key: 'description'},
+        {key: 'needReview', label: 'SIIIIIIIIIIIIIIIIIIIII Needs review será?'},
         {key: 'responseFormat', label: 'Response'}
       ],
       /* fields: [
@@ -226,6 +209,28 @@ export default {
       ]
     }
   },
+  created () {
+    /* Creates a list of objects that will save user answers */
+    var testResponseList = []
+    for (var i = 0; i < this.items.length; i++) {
+      var itemResponse = {}
+      var itemId = this.items[i].itemId
+      itemResponse.itemId = itemId
+      itemResponse.needReview = false
+      itemResponse.numericAnswer = null
+      itemResponse.typeResponse = null
+      itemResponse.reviewComments = null
+      itemResponse.typeReview = null
+      itemResponse.idResponseFormat = null
+      testResponseList.push(itemResponse)
+    }
+    this.responsesList = {
+      'subc1': testResponseList[0],
+      'subc2': testResponseList[1],
+      'subc3': testResponseList[2]
+    }
+    console.log('propertyComputed will update, as this.property is now reactive.')
+  },
   methods: {
     getBadge (status) {
       return status === 'Active' ? 'success'
@@ -239,7 +244,15 @@ export default {
     toggleJustification (item) {
       /* Chages the justification of an item from visible to visible and vice-versa */
       item.showJustification = !item.showJustification
+    },
+    toggleReview (row) {
+      /* Chages the justification of an item from visible to visible and vice-versa */
+      row.needReview = !row.needReview
     }
+  },
+  components: {
+    /* tag, component name */
+    'item-justification': itemJustification
   }
 }
 </script>

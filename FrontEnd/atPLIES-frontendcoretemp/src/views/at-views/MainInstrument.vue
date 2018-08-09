@@ -93,6 +93,7 @@
 
 import BDData from './_BDData.js'
 import cTable from '../base/Table.vue'
+import itemJustification from './ItemJustification.vue'
 
 export default {
   name: 'main_instrument',
@@ -105,7 +106,11 @@ export default {
       selected: [] // Must be an array reference!
     }
   },
-  components: {cTable},
+  components: {
+    /* tag, component name */
+    'item-justification': itemJustification,
+    cTable
+  },
   methods: {
     click () {
       // do nothing
