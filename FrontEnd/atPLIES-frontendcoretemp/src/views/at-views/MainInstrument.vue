@@ -84,7 +84,8 @@
     <!-- Formulario para llenar las dimensiones, subcriterios y criterios -->
     <b-row fluid>
       <b-col lg="12">
-        <subItems-table hover caption="<i class='fa fa-align-justify'></i> APPLIES motivation"></subItems-table>
+        <subItems-table hover caption="<i class='fa fa-align-justify'></i> APPLIES motivation" :hierarchicalLevelTwo="hierarchicalLevelTwo"></subItems-table>
+        <subItems-table hover caption=" " :hierarchicalLevelTwo="hierarchicalLevelTwo"></subItems-table>
       </b-col><!--/.col-->
     </b-row>
   </div>
@@ -103,7 +104,107 @@ export default {
       parameters: BDData.parameters,
       // participantResponse: BDData.participantResponse,
       /* v-model.lazy="participantReponse.participantName" */
-      selected: [] // Must be an array reference!
+      selected: [], // Must be an array reference!,
+      hierarchicalLevelTwo:
+        {
+          'itemId': 'cri1',
+          'suggestedImportance': {
+            'numericValue': 1,
+            'label': 'desirable'
+          },
+          'responseFormat': '',
+          'name': 'Criterio 2 tittle',
+          'description': 'Criterion 2',
+          'justification': 'Criterion justification',
+          'hierarchicalLevel': 2,
+          'progress': 0.0,
+          'numSubitemsFilled': 0,
+          'feedback': [{
+            'feedbackType': 'positive',
+            'text': 'string',
+            'minScore': 0,
+            'maxScore': 0,
+            'references': [{
+              'name': 'Empirical evaluation of a decision support model for adopting software product line engineering',
+              'reference': '(Tüzün, Tekinerdogan, Kalender, & Bilgen, 2015)',
+              'cite': 'Tüzün, E., Tekinerdogan, B., Kalender, M. E., & Bilgen, S. (2015). Empirical evaluation of a decision support model for adopting software product line engineering. Information and Software Technology, 60, 77–101. https://doi.org/10.1016/j.infsof.2014.12.007'
+            }]
+          }],
+          subItems: [ {
+            'itemId': 'subc1',
+            'suggestedImportance': {
+              'numericValue': 1,
+              'label': 'desirable'
+            },
+            'responseFormat': 'rating',
+            'name': 'Manager support the innitiative',
+            'description': 'Managers will support the initiative for exploring a product line solution',
+            'justification': 'string',
+            'showJustification': false,
+            'hierarchicalLevel': 3,
+            'feedback': [{
+              'feedbackType': 'positive',
+              'text': 'string',
+              'minScore': 0,
+              'maxScore': 0,
+              'references': [{
+                'name': 'Empirical evaluation of a decision support model for adopting software product line engineering',
+                'reference': '(Tüzün, Tekinerdogan, Kalender, & Bilgen, 2015)',
+                'cite': 'Tüzün, E., Tekinerdogan, B., Kalender, M. E., & Bilgen, S. (2015). Empirical evaluation of a decision support model for adopting software product line engineering. Information and Software Technology, 60, 77–101. https://doi.org/10.1016/j.infsof.2014.12.007'
+              }]
+            }]
+          },
+          {
+            'itemId': 'subc2',
+            'suggestedImportance': {
+              'numericValue': 1,
+              'label': 'desirable'
+            },
+            'responseFormat': 'rating',
+            'name': 'Project leader',
+            'description': 'The product line project would have a project leader with authority to take decisions and support the idea of change',
+            'justification': 'This is the explanation about why one of those criteria are important',
+            'showJustification': false,
+            'hierarchicalLevel': 3,
+            'feedback': [{
+              'feedbackType': 'positive',
+              'text': 'string',
+              'minScore': 0,
+              'maxScore': 0,
+              'references': [{
+                'name': 'Empirical evaluation of a decision support model for adopting software product line engineering',
+                'reference': '(Tüzün, Tekinerdogan, Kalender, & Bilgen, 2015)',
+                'cite': 'Tüzün, E., Tekinerdogan, B., Kalender, M. E., & Bilgen, S. (2015). Empirical evaluation of a decision support model for adopting software product line engineering. Information and Software Technology, 60, 77–101. https://doi.org/10.1016/j.infsof.2014.12.007'
+              }]
+            }]
+          },
+          {
+            'itemId': 'subc3',
+            'suggestedImportance': {
+              'numericValue': 1,
+              'label': 'desirable'
+            },
+            'responseFormat': 'rating',
+            'name': 'sub criterion 3',
+            'description': 'description sub criterion 3',
+            'justification': 'string',
+            'showJustification': true,
+            'hierarchicalLevel': 3,
+            'feedback': [{
+              'feedbackType': 'positive',
+              'text': 'string',
+              'minScore': 0,
+              'maxScore': 0,
+              'references': [{
+                'name': 'Empirical evaluation of a decision support model for adopting software product line engineering',
+                'reference': '(Tüzün, Tekinerdogan, Kalender, & Bilgen, 2015)',
+                'cite': 'Tüzün, E., Tekinerdogan, B., Kalender, M. E., & Bilgen, S. (2015). Empirical evaluation of a decision support model for adopting software product line engineering. Information and Software Technology, 60, 77–101. https://doi.org/10.1016/j.infsof.2014.12.007'
+              }]
+            }
+            ]
+          }
+          ]
+        }
     }
   },
   components: {
