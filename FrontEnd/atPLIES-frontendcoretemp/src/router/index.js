@@ -11,6 +11,8 @@
   nested paths that start with / will be treated as a root path
 */
 
+/* eslint-disable */
+
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -24,53 +26,56 @@ import Dashboard from '@/views/Dashboard'
 import Cards from '@/views/base/Cards'
 import Forms from '@/views/base/Forms'
 import MainInstrument from '@/views/at-views/MainInstrument'
+import Instructions from '@/views/at-views/Instructions.vue'
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash',
-  linkActiveClass: 'open active',
-  scrollBehavior: () => ({ y: 0 }),
-  routes: [
-    {
-      path: '/',
-      redirect: '/dashboard',
-      name: 'Home',
-      component: Full, /* así se especifica que el resto de componentes son hijos de full */
-      children: [
-        {
-          path: 'dashboard',
-          name: 'Dashboard',
-          component: Dashboard
-        },
-        {
-          path: 'main_instrument',
-          name: 'Main Instrument',
-          component: MainInstrument
-        },
-        {
-          path: 'base',
-          redirect: '/base/cards',
-          name: 'Base',
-          component: {
-            /* Empty root */
-            render (c) { return c('router-view') }
-          },
-          children: [
-            {
-              path: 'forms',
-              name: 'Forms',
-              component: Forms
+    mode: 'hash',
+    linkActiveClass: 'open active',
+    scrollBehavior: () => ({ y: 0 }),
+    routes: [{
+        path: '/',
+        redirect: '/dashboard',
+        name: 'Home',
+        component: Full,
+        /* así se especifica que el resto de componentes son hijos de full */
+        children: [{
+                path: 'dashboard',
+                name: 'Dashboard',
+                component: Dashboard
             },
             {
-              path: 'cards',
-              name: 'Cards',
-              component: Cards
+                path: 'main_instrument',
+                name: 'Main Instrument',
+                component: MainInstrument
+            },
+            {
+                path: 'instructions',
+                name: 'Instructions',
+                component: Instructions
+            },
+            {
+                path: 'base',
+                redirect: '/base/cards',
+                name: 'Base',
+                component: {
+                    /* Empty root */
+                    render(c) { return c('router-view') }
+                },
+                children: [{
+                        path: 'forms',
+                        name: 'Forms',
+                        component: Forms
+                    },
+                    {
+                        path: 'cards',
+                        name: 'Cards',
+                        component: Cards
+                    }
+                ]
             }
-          ]
-        }
 
-      ]
-    }
-  ]
+        ]
+    }]
 })

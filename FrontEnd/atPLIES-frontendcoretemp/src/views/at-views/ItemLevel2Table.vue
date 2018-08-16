@@ -1,7 +1,7 @@
 <template>
   <b-card :header='caption' class="card-body">
     <!-- stacked -->
-    <b-table :hover='hover' :bordered='bordered' :small='small'  responsive='md' :hierarchicalLevelTwo='hierarchicalLevelTwo' :items='responsesList' :fields='fields' :current-page='currentPage' :per-page='perPage' caption-top >
+    <b-table :hover='hover' :bordered='bordered' :small='small'  responsive='md' :dataHierarchicalLevelTwo='dataHierarchicalLevelTwo' :items='responsesList' :fields='fields' :current-page='currentPage' :per-page='perPage' caption-top>
       <template slot="table-caption">
       <b-card :no-body="true">
         <b-card-body class="p-3 clearfix">
@@ -18,10 +18,10 @@
           <div class="h1 text-muted text-left mb-4">
             <i class="fa fa-puzzle-piece fa-circle bg-primary p-4 px-5 font-2xl mr-3 float-left round" id='justification_item'></i>
           </div>-->
-          <div class="h5 text-primary mb-0 mt-2 text-uppercase">{{hierarchicalLevelTwo.name}}</div>
+          <div class="h5 text-primary mb-0 mt-2 text-uppercase">{{dataHierarchicalLevelTwo.name}}</div>
           <div class='clearfix'>
             <div class='float-left text-muted font-weight-bold font-xs'>
-             {{hierarchicalLevelTwo.description}}
+             {{dataHierarchicalLevelTwo.description}}
             </div>
             <div class='float-right'>
               <!-- we use @click.stop here to prevent emitting of a 'row-clicked' event  -->
@@ -31,7 +31,7 @@
               </b-btn>
             </div>
           </div>
-          <item-justification v-show='showLevel2Justification' :justification='hierarchicalLevelTwo.justification' :itemName='hierarchicalLevelTwo.name'></item-justification>
+          <item-justification v-show='showLevel2Justification' :justification='dataHierarchicalLevelTwo.justification' :itemName='dataHierarchicalLevelTwo.name'></item-justification>
           <div class="text-muted font-weight-bold font-xs">
             <small>
              alhop-4 px-5 font-2xl mr-3
@@ -128,7 +128,7 @@ import itemJustification from './ItemJustification.vue'
 // import func from './vue-temp/vue-editor-bridge.js'
 
 export default {
-  name: 'subItems-table',
+  name: 'item-level2-table',
   props: {
     caption: {
       type: String,
@@ -162,7 +162,7 @@ export default {
       type: Array,
       default: function () { return BDData.appliesLikertOptions }
     },
-    hierarchicalLevelTwo: {
+    dataHierarchicalLevelTwo: {
       type: Object
     }
   },
@@ -187,12 +187,12 @@ export default {
   },
   mounted () {
     /* Creates a list of objects that will save user answers */
-    this.totalItems = this.hierarchicalLevelTwo.subItems.length
+    this.totalItems = this.dataHierarchicalLevelTwo.subItems.length
     for (var i = 0; i < this.totalItems; i++) {
       var itemResponse = {}
-      var itemId = this.hierarchicalLevelTwo.subItems[i].itemId
-      itemResponse.name = this.hierarchicalLevelTwo.subItems[i].name
-      itemResponse.description = this.hierarchicalLevelTwo.subItems[i].description
+      var itemId = this.dataHierarchicalLevelTwo.subItems[i].itemId
+      itemResponse.name = this.dataHierarchicalLevelTwo.subItems[i].name
+      itemResponse.description = this.dataHierarchicalLevelTwo.subItems[i].description
       itemResponse.itemId = itemId
       itemResponse.needReview = false
       itemResponse.numericAnswer = null

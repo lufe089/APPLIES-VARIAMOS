@@ -24,13 +24,13 @@
           <div fluid>
             <b-row>
               <b-col md="6">
-                <b-form-group :description="$t('message.please_enter_name')" :label="$t('message.name')" label-for="basicName" :label-cols="3"
+                <b-form-group :description="$t('message.please_enter_name')" :label="$t('message.name')" label-for="basicName" :label-cols="2"
                   :horizontal="true">
                   <b-form-input id="basicName" type="text" v-model.lazy="participantResponse.name"></b-form-input>
                 </b-form-group>
               </b-col>
               <b-col md="6">
-                <b-form-group :description="$t('message.please_enter_email')" :label="$t('message.email')" label-for="basicEmail" :label-cols="3"
+                <b-form-group :description="$t('message.please_enter_email')" :label="$t('message.email')" label-for="basicEmail" :label-cols="2"
                   :horizontal="true">
                   <b-form-input id="basicEmail" type="email" placeholder="lfrincon@applies.variamos.com" v-model.lazy="participantResponse.email"></b-form-input>
                 </b-form-group>
@@ -40,7 +40,7 @@
               <b-col md="12">
                 <b-form-group
                   :label="$t('message.profile')"  label-for="basicInlineCustomCheckboxes"
-                  :label-cols="2"
+                  :label-cols="1"
                   :horizontal="true">
                   <b-form-checkbox-group id="participantProfiles" v-model="participantResponse.profiles">
                     <div class="custom-control custom-checkbox custom-control-inline col-sm-3 py-1" v-for="(value, key) in parameters.profiles" :key="key">
@@ -62,9 +62,9 @@
               <b-col md="12">
                 <b-form-group
                   :label="$t('message.comments')" label-for="commentsTextarea"
-                  :label-cols="3"
+                  :label-cols="1"
                   :horizontal="true">
-                  <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="5" :placeholder="$t('message.any_comment')" v-model="participantResponse.comments"></textarea>
+                  <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="3" :placeholder="$t('message.any_comment')" v-model="participantResponse.comments"></textarea>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -84,8 +84,8 @@
     <!-- Formulario para llenar las dimensiones, subcriterios y criterios -->
     <b-row fluid>
       <b-col lg="12">
-        <subItems-table hover caption="<i class='fa fa-align-justify'></i> APPLIES motivation" :hierarchicalLevelTwo="hierarchicalLevelTwo"></subItems-table>
-        <subItems-table hover caption=" " :hierarchicalLevelTwo="hierarchicalLevelTwo"></subItems-table>
+        <item-level2-table hover caption="<i class='fa fa-align-justify'></i> APPLIES motivation" :dataHierarchicalLevelTwo="dataHierarchicalLevelTwo"></item-level2-table>
+        <item-level2-table hover caption=" " :dataHierarchicalLevelTwo="dataHierarchicalLevelTwo"></item-level2-table>
       </b-col><!--/.col-->
     </b-row>
   </div>
@@ -93,8 +93,7 @@
 <script>
 
 import BDData from './_BDData.js'
-import subItemsTable from './SubItemsTable.vue'
-import itemJustification from './ItemJustification.vue'
+import itemLevel2Table from './ItemLevel2Table.vue'
 
 export default {
   name: 'main_instrument',
@@ -105,7 +104,7 @@ export default {
       // participantResponse: BDData.participantResponse,
       /* v-model.lazy="participantReponse.participantName" */
       selected: [], // Must be an array reference!,
-      hierarchicalLevelTwo:
+      dataHierarchicalLevelTwo:
         {
           'itemId': 'cri1',
           'suggestedImportance': {
@@ -209,8 +208,7 @@ export default {
   },
   components: {
     /* tag, component name */
-    'item-justification': itemJustification,
-    subItemsTable
+    itemLevel2Table
   },
   methods: {
     click () {
@@ -225,6 +223,13 @@ export default {
     },
     starForm: function () {
       alert(JSON.stringify(BDData.participantResponse))
+    }
+  },
+  filters: {
+    decimalNumbers: function (value) {
+      if (!value) return ''
+      value = value.toFixed(2)
+      return value
     }
   },
   mounted: function () {

@@ -2,7 +2,7 @@
   <div class="sidebar">
     <SidebarHeader/>
     <SidebarForm/>
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" variant="primary">
       <div slot="header"></div>
       <ul class="nav">
         <template v-for="(item, index) in navItems">

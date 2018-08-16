@@ -22,6 +22,7 @@
 /* Este componente sirve para mostrar la justificación asociada a cualquier item */
 
 export default {
+  name: 'item-justification',
   data () {
     return { }
   },
